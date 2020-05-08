@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "hrate-web"
+    }
+  },
+  "defaultProject": "hrate-web",
+  "cli": {
+    "analytics": false
+  }
 }
