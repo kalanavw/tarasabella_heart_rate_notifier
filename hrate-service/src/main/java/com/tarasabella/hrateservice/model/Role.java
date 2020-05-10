@@ -6,7 +6,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -22,7 +25,6 @@ import java.time.LocalDateTime;
 public class Role implements Serializable
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, updatable = false)
 	private long id;
 
@@ -40,8 +42,9 @@ public class Role implements Serializable
 	@LastModifiedDate
 	private LocalDateTime modifiedDate = LocalDateTime.now();
 
-	public Role( String role, String description )
+	public Role( long id, String role, String description )
 	{
+		this.id = id;
 		this.role = role;
 		this.description = description;
 	}

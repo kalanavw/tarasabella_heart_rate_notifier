@@ -15,6 +15,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -59,9 +64,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers( "/session/**" ).permitAll().
+				.authorizeRequests().antMatchers( "/session/**", "/roles/**" ).permitAll().
 				// all other requests need to be authenticated
 						anyRequest().authenticated().and().
+				cors().configurationSource( corsConfigurationSource() ).and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 						exceptionHandling().authenticationEntryPoint( jwtAuthenticationEntryPoint ).and().sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
@@ -74,5 +80,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	public void configure( WebSecurity web ) throws Exception
 	{
 		web.ignoring().antMatchers( "/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**" );
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource()
+	{
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.setAllowedHeaders( Collections.singletonList( "*" ) );
+		corsConfiguration.setAllowedOrigins( Collections.singletonList( "*" ) );
+		corsConfiguration.setAllowedMethods( Collections.singletonList( "*" ) );
+		corsConfiguration.setAllowCredentials( true );
+
+		UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+		configurationSource.registerCorsConfiguration( "/**", corsConfiguration );
+		return configurationSource;
 	}
 }

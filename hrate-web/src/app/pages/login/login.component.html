@@ -1,0 +1,47 @@
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+        Login
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <table style="border: 1px" align="center">
+        <tr>
+          <td> </td>
+          <td>
+            <mat-form-field>
+            <input matInput placeholder="Username" formControlName="username">
+              <mat-error *ngIf="loginForm.get('username').hasError('required')">
+                Username cannot be empty
+              </mat-error>
+          </mat-form-field></td>
+        </tr>
+        <tr>
+          <td> </td>
+          <td>
+            <mat-form-field >
+            <input matInput placeholder="Password" formControlName="password" type="password">
+              <mat-error *ngIf="loginForm.get('password').hasError('password')">
+                Password cannot be empty
+              </mat-error>
+          </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button mat-raised-button type="submit" color="primary" class="btn-block" [disabled]="loginForm.invalid">
+              <mat-icon aria-hidden="false" aria-label="lock">lock_open</mat-icon>
+              Log in
+            </button>
+            <button style="margin-left: 100px" mat-stroked-button routerLink="register"
+                    type="button" color="accent" class="btn-block" >
+              Register
+            </button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </mat-card-content>
+</mat-card>

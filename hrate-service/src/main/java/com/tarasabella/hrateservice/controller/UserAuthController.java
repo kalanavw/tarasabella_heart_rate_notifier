@@ -1,7 +1,6 @@
 package com.tarasabella.hrateservice.controller;
 
 import com.tarasabella.hrateservice.model.EsResponse;
-import com.tarasabella.hrateservice.model.JwtRequest;
 import com.tarasabella.hrateservice.model.JwtResponse;
 import com.tarasabella.hrateservice.model.User;
 import com.tarasabella.hrateservice.service.JwtUserDetailsService;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("session/")
-@CrossOrigin
 public class UserAuthController
 {
 	@Autowired
@@ -38,11 +36,11 @@ public class UserAuthController
 	private UserService userService;
 
 	@PostMapping("authenticate")
-	public ResponseEntity<EsResponse> createAuthenticationToken( @RequestBody JwtRequest authenticationRequest ) throws Exception
+	public ResponseEntity<EsResponse> createAuthenticationToken( @RequestHeader String username, @RequestHeader String password ) throws Exception
 	{
 
-		authenticate( authenticationRequest.getUsername(), authenticationRequest.getPassword() );
-		final UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername( authenticationRequest.getUsername() );
+		authenticate( username, password );
+		final UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername( username );
 		final String token = this.jwtTokenUtil.generateToken( userDetails );
 		return ResponseEntity.ok( new EsResponse<>( 1, new JwtResponse( token ), "authentication success" ) );
 	}

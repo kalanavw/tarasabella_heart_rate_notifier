@@ -1,0 +1,131 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Dashboard</h1>
+  <mat-grid-list cols="2" rowHeight="1200px">
+    <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="!hideGrid" >
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>
+            User Details
+            <button mat-icon-button class="more-button" color="warn" matTooltip="refresh" (click)="loadUsers()">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="userDataSource">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> #id</th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="contactNo">
+                <th mat-header-cell *matHeaderCellDef> Contact No</th>
+                <td mat-cell *matCellDef="let element"> {{element.contactNo}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="observe">
+                <th mat-header-cell *matHeaderCellDef>Observe Heart Rate</th>
+                <td mat-cell *matCellDef="let element" align="left">
+                  <button mat-stroked-button type="submit" color="warn" class="btn-block"
+                          matTooltip="View heart rate data" (click)="onObserve(element)">
+                    Observe
+                  </button>
+                </td>
+              </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="view">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" align="center">
+                  <button mat-stroked-button type="submit" color="accent" class="btn-block"
+                          matTooltip="View heart rate data" (click)="viewHeartRateData(element)">
+                    <mat-icon aria-hidden="false" aria-label="lock">favorite</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator #userPaginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="2" [rowspan]="1" *ngIf="hideGrid">
+      <mat-card class="dashboard-card" #scrollMe>
+        <mat-card-header>
+          <mat-card-title>
+            Heart Rate Details
+          </mat-card-title>
+          <button mat-icon-button mat-raised-button class="more-button" color="warn" matTooltip="back"
+                  (click)="hideGrid = !hideGrid">
+            <mat-icon>keyboard_backspace</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="heartDataSource">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> #id</th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rate">
+                <th mat-header-cell *matHeaderCellDef> Heart Rate</th>
+                <td mat-cell *matCellDef="let element"> {{element.totalRateCount}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Checked Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.createdDate | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let element" align="left">
+                  <mat-chip-list aria-label="Fish selection">
+                    <mat-chip color="accent" selected *ngIf="element.totalRateCount < 100">HEALTHY</mat-chip>
+                    <mat-chip color="primary" selected
+                              *ngIf="element.totalRateCount >= 100 && element.totalRateCount < 160">Medium Risk
+                    </mat-chip>
+                    <mat-chip color="warn" selected *ngIf="element.totalRateCount >= 160">High Risk</mat-chip>
+                  </mat-chip-list>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="view">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" align="center">
+                  <button mat-stroked-button type="submit" color="accent" class="btn-block"
+                          matTooltip="View heart rate data" (click)="openDialog(element)">
+                    View Details
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="heartDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: heartDisplayedColumns;"></tr>
+            </table>
+            <mat-paginator #heartPaginator [pageSizeOptions]="[10, 15]" showFirstLastButtons></mat-paginator>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+</div>

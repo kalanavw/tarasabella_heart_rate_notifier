@@ -1,5 +1,6 @@
 package com.tarasabella.hrateservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Entity
 @DynamicUpdate
 @Table(name = "USERS")
-@JsonIgnoreProperties(value = { "password" }, allowSetters = true)
+@JsonIgnoreProperties(value = { "password", "heartRates" }, allowSetters = true)
 public class User implements Serializable
 {
 	@Id
@@ -53,6 +54,7 @@ public class User implements Serializable
 	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
 	private Set<Role> roles;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonManagedReference
 	private Set<HeartRate> heartRates = new HashSet<>();

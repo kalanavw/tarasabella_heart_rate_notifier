@@ -4,12 +4,10 @@ import com.tarasabella.hrateservice.model.Role;
 import com.tarasabella.hrateservice.repository.RoleRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -19,8 +17,6 @@ import java.util.List;
 public class HrateServiceApplication
 {
 	private static final Logger logger = LogManager.getLogger( HrateServiceApplication.class );
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 
 	public static void main( String[] args )
 	{
@@ -60,12 +56,10 @@ public class HrateServiceApplication
 			List<Role> roles = new ArrayList<Role>()
 			{
 				{
-					add( new Role( "USER", "With basic privileges" ) );
-					add( new Role( "ADMIN", "With full privileges" ) );
+					add( new Role( 1, "USER", "With basic privileges" ) );
+					add( new Role( 2, "ADMIN", "With full privileges" ) );
 				}
 			};
-			this.jdbcTemplate.execute( "DELETE FROM USER_ROLES" );
-			roleRepository.deleteAll();
 			roleRepository.saveAll( roles );
 
 			logger.debug( "Debugging log" );

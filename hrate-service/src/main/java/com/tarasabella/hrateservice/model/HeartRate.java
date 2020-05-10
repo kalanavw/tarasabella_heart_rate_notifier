@@ -1,12 +1,13 @@
 package com.tarasabella.hrateservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -24,12 +25,20 @@ public class HeartRate
 	@Column(name = "ID", nullable = false, updatable = false)
 	private long id;
 
+	@Column(name = "TOTAL_RATE_COUNT", nullable = false, updatable = false)
+	private int totalRateCount;
+
+	@Column(name = "CREATED_DATE", nullable = false, updatable = false)
+	@CreatedDate
+	private LocalDateTime createdDate = LocalDateTime.now();
+
+	@JsonIgnore
 	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "USER_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_USER_HEART_RATES"))
 	private User user;
 
-	@OneToMany(mappedBy = "heartRate", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@JsonManagedReference
-	private Set<HeartRateData> heartRateData = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@JoinTable(name = "HEART_RATES_HAS_DATA", joinColumns = @JoinColumn(name = "HEART_RATES_ID", referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_HEART_RATES2DATA")), inverseJoinColumns = @JoinColumn(name = "HEART_RATES_DATA_ID", referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_HEART_RATES_DATA2HEART_RATES")))
+	private Set<HeartRateData> heartRateData;
 }

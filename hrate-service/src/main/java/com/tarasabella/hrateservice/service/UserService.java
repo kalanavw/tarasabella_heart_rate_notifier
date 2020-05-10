@@ -1,16 +1,16 @@
 package com.tarasabella.hrateservice.service;
 
 import com.tarasabella.hrateservice.model.EsResponse;
-import com.tarasabella.hrateservice.model.Role;
 import com.tarasabella.hrateservice.model.User;
 import com.tarasabella.hrateservice.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Copyright (c) 2018. scicom.com.my - All Rights Reserved
@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 @Service
 public class UserService
 {
+	private static final Logger logger = LogManager.getLogger( UserService.class );
 	@Autowired
 	private UserRepository userRepository;
 
@@ -27,13 +28,39 @@ public class UserService
 
 	public EsResponse<User> createNewUser( User user )
 	{
-		user.setRoles( Stream.of( new Role( 1L ) ).collect( Collectors.toSet() ) );
 		user.setPassword( this.bcryptEncoder.encode( user.getPassword() ) );
-		return new EsResponse<>( 1, this.userRepository.save( user ), "user created success" );
+		try
+		{
+			return new EsResponse<>( 1, this.userRepository.save( user ), "user created success" );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			logger.error( "user created fail", e );
+			return new EsResponse<>( -1, "user created fail" );
+		}
 	}
 
 	public Optional<User> findByUsername( String username )
 	{
 		return this.userRepository.findByUsername( username );
+	}
+
+	public EsResponse<?> findUsers( String username )
+	{
+		try
+		{
+			if ( username != null && !username.trim().isEmpty() )
+			{
+				return new EsResponse<>( 1, Arrays.asList( this.findByUsername( username ).orElse( null ) ), "user found" );
+			}
+			return new EsResponse<>( 1, this.userRepository.findAll(), "users found" );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			logger.error( "user search fail", e );
+			return new EsResponse<>( -1, "user search fail" );
+		}
 	}
 }

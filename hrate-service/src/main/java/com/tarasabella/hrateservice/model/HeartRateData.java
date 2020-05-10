@@ -1,7 +1,7 @@
 package com.tarasabella.hrateservice.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @DynamicUpdate
 @Table(name = "HEART_RATES_DATA")
+@NoArgsConstructor
 public class HeartRateData
 {
 	@Id
@@ -23,13 +24,18 @@ public class HeartRateData
 	private long id;
 
 	@Column(name = "PULSE_COUNT")
-	private int count;
+	private int value;
 
 	@Column(name = "PULSE_TIME")
-	private LocalDateTime pulseTime;
+	private LocalDateTime time;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "HEART_RATE_ID", nullable = false, referencedColumnName = "ID", foreignKey = @ForeignKey(name = "FK_HEART_RATE_DATA"))
-	private HeartRate heartRate;
+	@Column(name = "PULSE_TIME_STR")
+	private String pulseTimeString;
+
+	public HeartRateData( int value, LocalDateTime time, String pulseTimeString )
+	{
+		this.value = value;
+		this.time = time;
+		this.pulseTimeString = pulseTimeString;
+	}
 }

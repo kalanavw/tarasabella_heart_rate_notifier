@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Heart Rate Data Of {{data.name}}</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="heartRateDataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> #id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef> Pulse Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef> Pulse Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.pulseTimeString}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="heartRateDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: heartRateDisplayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
