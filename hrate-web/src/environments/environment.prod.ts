@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  totalRateCount: [60, 75, 90, 150, 160, 175],
 };
